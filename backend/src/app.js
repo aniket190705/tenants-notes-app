@@ -12,7 +12,7 @@ const app = express()
 
 // ✅ CORS must come first
 app.use(cors({
-    origin: 'http://localhost:5173',  // your frontend
+    origin: ['http://localhost:5173', 'https://tenants-notes-app.vercel.app'],  // your frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 }))
