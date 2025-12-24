@@ -1,4 +1,3 @@
-// src/api.js
 import axios from 'axios'
 
 const API_BASE = import.meta.env.VITE_API_BASE || ''
@@ -13,7 +12,7 @@ function authHeaders() {
 }
 
 export async function login(email, password) {
-    const res = await axios.post(`${API_BASE}/api/login`, { email, password })
+    const res = await axios.post(`${API_BASE}/api/v1/login`, { email, password })
     console.log(res)
     return res.data
 }
@@ -41,21 +40,15 @@ export async function deleteNote(id) {
 
 
 export async function updateNote(id, title, content) {
-    const res = await axios.put(`${API_BASE}/api/v1/notes/${id}`, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ title, content }),
-    });
+    const res = await axios.put(
+        `${API_BASE}/api/v1/notes/${id}`,
+        { title, content },
+        { headers: authHeaders() }
+    );
 
-    if (!res.ok) {
-        const err = await res.json();
-        throw err;
-    }
-
-    return res.json();
+    return res.data;
 }
+
 
 
 

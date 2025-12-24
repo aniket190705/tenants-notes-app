@@ -1,4 +1,3 @@
-// src/models/User.js
 const { mongoose } = require('../src/db')
 const { Schema } = require('mongoose')
 

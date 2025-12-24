@@ -1,9 +1,8 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
 import { fetchNotes, addNote, upgradeTenant } from "./api";
 
 function App() {
-  const slug = "my-tenant"; // Normally this comes from login/session
+  const slug = "my-tenant";
   const [notes, setNotes] = useState([]);
   const [error, setError] = useState("");
 
