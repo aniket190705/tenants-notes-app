@@ -27,26 +27,11 @@ function App() {
     }
   }
 
-  async function handleUpgrade() {
-    await upgradeTenant(slug);
-    setError("");
-    loadNotes();
-    alert("Upgraded to Pro! Now you can add unlimited notes.");
-  }
-
   return (
     <div className="App">
       <h1>Notes App ({slug})</h1>
 
       <button onClick={handleAddNote}>Add Note</button>
-      {error && (
-        <div style={{ color: "red", marginTop: "10px" }}>
-          {error}
-          {error.includes("Upgrade") && (
-            <button onClick={handleUpgrade}>Upgrade to Pro</button>
-          )}
-        </div>
-      )}
 
       <ul>
         {notes.map((n) => (
