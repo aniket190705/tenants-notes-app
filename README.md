@@ -36,12 +36,12 @@ A small **role-based Notes Management** application demonstrating secure backend
 > Do **not** rely on client-sent role values — the backend enforces admin-only delete by checking the role inside the JWT.
 
 Example (backend pseudo):
-```js
+```
 const user = getUserFromReq(req); // from JWT
 if (user.role !== 'admin') return res.status(403).json({ error: 'Only admins can delete notes' });
 ```
 
-##🔗 API (versioned under /api/v1)
+## 🔗 API (versioned under /api/v1)
 
 API Endpoints
 Authentication
@@ -111,7 +111,7 @@ curl -X DELETE http://localhost:5000/api/v1/notes/<NOTE_ID> \
  -H "Authorization: Bearer <ADMIN_JWT_TOKEN>"
 ```
 
-- ✅ Assignment coverage checklist
+**Assignment coverage checklist**
 
 - ✅ JWT authentication & password hashing
 
@@ -124,15 +124,3 @@ curl -X DELETE http://localhost:5000/api/v1/notes/<NOTE_ID> \
 - ✅ Frontend integration for testing APIs
 
 - ✅ Modular project structure (routes, middleware, models)
-
-- 📈 Scalability / next steps (short note)
-
-Add user ownership (attach userId to notes and return only owner’s notes)
-
-Add validation (Joi/Zod) and centralized error handler
-
-Add caching (Redis), containerize with Docker, and add logging/monitoring for production
-
-👤 Author
-
-Aniket Sharma
