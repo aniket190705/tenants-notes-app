@@ -41,8 +41,7 @@ export async function deleteNote(id) {
 
 
 export async function updateNote(id, title, content) {
-    const res = await fetch(`/api/v1/notes/${id}`, {
-        method: "PUT",
+    const res = await axios.put(`${API_BASE}/api/v1/notes/${id}`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
