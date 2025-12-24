@@ -28,50 +28,52 @@ A small **role-based Notes Management** application demonstrating secure backend
 **Backend:** Node.js, Express, MongoDB, Mongoose, bcrypt, jsonwebtoken  
 **Frontend:** React, Axios, React Router
 
-🔗 API Versioning
+---
 
-All APIs are versioned under:
+## 🔐 Important: Role enforcement
 
-/api/v1
+> Role is determined from the **decoded JWT** on the server.  
+> Do **not** rely on client-sent role values — the backend enforces admin-only delete by checking the role inside the JWT.
 
-📚 API Documentation
+Example (backend pseudo):
+```
+const user = getUserFromReq(req); // from JWT
+if (user.role !== 'admin') return res.status(403).json({ error: 'Only admins can delete notes' });
+```
+
+## 🔗 API (versioned under /api/v1)
+
+API Endpoints
 Authentication
 
-Login
+POST /api/v1/auth/register – Register a new user
 
-POST /api/v1/auth/login
+POST /api/v1/auth/login – User login (returns JWT)
 
+Notes
 
-Response
+POST /api/v1/notes – Create a new note
 
-{
-  "token": "jwt_token",
-  "role": "user"
-}
+GET /api/v1/notes – Get all notes
 
-Notes (JWT Required)
+PUT /api/v1/notes/:id – Update a note
 
-Create Note
+DELETE /api/v1/notes/:id – Delete a note (admin only)
 
-POST /api/v1/notes
+🔐 All /notes endpoints require a valid JWT in the Authorization header.
 
 
-Get Notes
+## 🔧 Installation & run
+**Prerequisites**
+```
+Node.js (v16+ recommended)
+MongoDB (local or Atlas)
+npm or yarn
+```
 
-GET /api/v1/notes
-
-
-Update Note
-
-PUT /api/v1/notes/:id
-
-
-Delete Note (Admin only)
-
-DELETE /api/v1/notes/:id
-
-⚙️ Installation
-Backend
+**Backend**
+```
+# clone and install
 git clone https://github.com/your-username/notes-app.git
 cd notes-app/backend
 npm install
@@ -85,34 +87,40 @@ npm install
 npm run dev
 ```
 
-Frontend
-cd frontend
+**Frontend**
+```
+cd ../frontend
 npm install
 npm start
+```
 
+Frontend default: http://localhost:5173
 
-Frontend: http://localhost:3000
+Backend default: http://localhost:4000
 
-Backend: http://localhost:5000
+Ensure frontend api base points to /api/v1 (e.g. http://localhost:5000/api/v1).
+```
+🧪 Example curl (create note)
+curl -X POST http://localhost:5000/api/v1/notes \
+ -H "Authorization: Bearer <JWT_TOKEN>" \
+ -H "Content-Type: application/json" \
+ -d '{"title":"Test","content":"Hello"}'
 
-🔒 Security & Scalability
+Example curl (delete note as admin)
+curl -X DELETE http://localhost:5000/api/v1/notes/<NOTE_ID> \
+ -H "Authorization: Bearer <ADMIN_JWT_TOKEN>"
+```
 
-JWT-based auth
+**Assignment coverage checklist**
 
-Backend-enforced role checks
+- ✅ JWT authentication & password hashing
 
-Modular project structure
+- ✅ Role-based access control (server-side enforcement)
 
-API versioning for future scalability
+- ✅ CRUD APIs for notes
 
-✅ Assignment Coverage
+- ✅ API versioning (/api/v1)
 
-✔ Authentication & JWT
-✔ Role-based access control
-✔ CRUD APIs
-✔ API versioning
-✔ Frontend integration
+- ✅ Frontend integration for testing APIs
 
-👨‍💻 Author
-
-Aniket Sharma
+- ✅ Modular project structure (routes, middleware, models)
