@@ -46,19 +46,19 @@ if (user.role !== 'admin') return res.status(403).json({ error: 'Only admins can
 API Endpoints
 Authentication
 
-POST /api/v1/auth/register – Register a new user
+- POST /api/v1/auth/register – Register a new user
 
-POST /api/v1/auth/login – User login (returns JWT)
+- POST /api/v1/auth/login – User login (returns JWT)
 
 Notes
 
-POST /api/v1/notes – Create a new note
+- POST /api/v1/notes – Create a new note
 
-GET /api/v1/notes – Get all notes
+- GET /api/v1/notes – Get all notes
 
-PUT /api/v1/notes/:id – Update a note
+- PUT /api/v1/notes/:id – Update a note
 
-DELETE /api/v1/notes/:id – Delete a note (admin only)
+- DELETE /api/v1/notes/:id – Delete a note (admin only)
 
 🔐 All /notes endpoints require a valid JWT in the Authorization header.
 
@@ -85,6 +85,20 @@ npm install
 
 # start (dev)
 npm run dev
+```
+
+*Seeding the database*
+```
+Before testing the application, you must **seed the database** with initial users.
+
+A `seed.js` file is provided to create:
+- One **admin** user
+- One **regular** user
+
+This step is required **only once**.
+
+### How to Seed
+From the backend/src directory, run:
 ```
 
 **Frontend**
