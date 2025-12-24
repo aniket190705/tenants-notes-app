@@ -6,7 +6,6 @@ const bodyParser = require('body-parser')
 const { connectDB } = require('./db')
 const authRoutes = require('../routes/auth')
 const notesRoutes = require('../routes/notes')
-const tenantsRoutes = require('../routes/tenants')
 
 const app = express()
 
@@ -37,8 +36,7 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok' }))
 
 // API routes
 app.use('/api', authRoutes)         // /api/login
-app.use('/api/notes', notesRoutes)  // /api/notes
-app.use('/api/tenants', tenantsRoutes) // /api/tenants/:slug/...
+app.use('/api/v1/notes', notesRoutes)  // /api/notes
 
 // 404 handler
 app.use((req, res) => res.status(404).json({ error: 'Not found' }))

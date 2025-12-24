@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getNotes, createNote, deleteNote, upgradeTenant } from "../api";
+import { getNotes, createNote, deleteNote, updateNote } from "../api";
 import { useNavigate } from "react-router-dom";
 
 export default function Notes() {
@@ -9,9 +9,32 @@ export default function Notes() {
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [showUpgrade, setShowUpgrade] = useState(false);
-  const tenantSlug = localStorage.getItem("tenantSlug");
+  const [editingId, setEditingId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editContent, setEditContent] = useState("");
   const role = localStorage.getItem("role");
+
+  function startEdit(note) {
+    setEditingId(note._id);
+    setEditTitle(note.title);
+    setEditContent(note.content);
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setEditTitle("");
+    setEditContent("");
+  }
+
+  async function handleUpdate(id) {
+    try {
+      await updateNote(id, editTitle, editContent);
+      cancelEdit();
+      await loadNotes();
+    } catch (err) {
+      setError(err.error || "Failed to update note");
+    }
+  }
 
   async function loadNotes() {
     setLoading(true);
@@ -19,12 +42,12 @@ export default function Notes() {
     try {
       const data = await getNotes();
       setNotes(data);
-      setShowUpgrade(data.length >= 3);
     } catch (err) {
       if (err.response?.status === 401) {
         localStorage.clear();
         navigate("/login");
       } else {
+        console.log(err);
         setError(err.response?.data?.error || "Failed to load notes");
       }
     } finally {
@@ -46,7 +69,6 @@ export default function Notes() {
       await loadNotes();
     } catch (err) {
       if (err.response?.data?.error === "Free plan limit reached") {
-        setShowUpgrade(true);
         setError("Free plan limit reached. Upgrade to Pro to add more notes.");
       } else {
         setError(err.response?.data?.error || "Failed to create");
@@ -55,27 +77,32 @@ export default function Notes() {
   }
 
   async function handleDelete(id) {
+    if (role !== "admin") {
+      window.alert("Only Admins can delete notes.");
+      return;
+    }
     if (!window.confirm("Delete note?")) return;
+
     try {
-      await deleteNote(id);
+      await deleteNote(id, role);
       await loadNotes();
     } catch (err) {
       setError("Failed to delete");
     }
   }
 
-  async function handleUpgrade() {
-    if (!tenantSlug) return;
-    try {
-      await upgradeTenant(tenantSlug);
-      // after upgrade, reload notes and hide upgrade CTA
-      await loadNotes();
-      setShowUpgrade(false);
-      alert("Upgraded to Pro — you can now create unlimited notes.");
-    } catch (err) {
-      setError(err.response?.data?.error || "Upgrade failed");
-    }
-  }
+  // async function handleUpgrade() {
+  //   if (!tenantSlug) return;
+  //   try {
+  //     await upgradeTenant(tenantSlug);
+  //     // after upgrade, reload notes and hide upgrade CTA
+  //     await loadNotes();
+  //     setShowUpgrade(false);
+  //     alert("Upgraded to Pro — you can now create unlimited notes.");
+  //   } catch (err) {
+  //     setError(err.response?.data?.error || "Upgrade failed");
+  //   }
+  // }
 
   function handleLogout() {
     localStorage.clear();
@@ -88,9 +115,7 @@ export default function Notes() {
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-semibold">Notes</h1>
           <div>
-            <span className="mr-4 text-sm text-gray-600">
-              Tenant: {tenantSlug} — Role: {role}
-            </span>
+            <span className="mr-4 text-sm text-gray-600">Role: {role}</span>
             <button onClick={handleLogout} className="px-3 py-1 border rounded">
               Logout
             </button>
@@ -112,20 +137,65 @@ export default function Notes() {
                     key={n._id}
                     className="p-3 border rounded flex justify-between items-start"
                   >
-                    <div>
-                      <div className="font-semibold">{n.title}</div>
-                      <div className="text-sm text-gray-700">{n.content}</div>
-                      <div className="text-xs text-gray-400 mt-1">
-                        Created: {new Date(n.createdAt).toLocaleString()}
-                      </div>
+                    <div className="flex-1">
+                      {editingId === n._id ? (
+                        <>
+                          <input
+                            value={editTitle}
+                            onChange={(e) => setEditTitle(e.target.value)}
+                            className="block w-full mb-2 border rounded p-1"
+                          />
+                          <textarea
+                            value={editContent}
+                            onChange={(e) => setEditContent(e.target.value)}
+                            className="block w-full border rounded p-1"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <div className="font-semibold">{n.title}</div>
+                          <div className="text-sm text-gray-700">
+                            {n.content}
+                          </div>
+                          <div className="text-xs text-gray-400 mt-1">
+                            Created: {new Date(n.createdAt).toLocaleString()}
+                          </div>
+                        </>
+                      )}
                     </div>
-                    <div>
-                      <button
-                        onClick={() => handleDelete(n._id)}
-                        className="text-sm text-red-600"
-                      >
-                        Delete
-                      </button>
+
+                    <div className="ml-3 space-y-1">
+                      {editingId === n._id ? (
+                        <>
+                          <button
+                            onClick={() => handleUpdate(n._id)}
+                            className="block text-sm text-green-600"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={cancelEdit}
+                            className="block text-sm text-gray-500"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => startEdit(n)}
+                            className="block text-sm text-blue-600"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(n._id)}
+                            className="block text-sm text-red-600"
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -153,28 +223,6 @@ export default function Notes() {
                   Create
                 </button>
               </form>
-
-              {showUpgrade && (
-                <div className="mt-4 p-3 bg-yellow-50 border rounded">
-                  <div className="mb-2">
-                    You have reached the Free plan limit (3 notes).
-                  </div>
-                  <div className="flex gap-2">
-                    {role === "admin" ? (
-                      <button
-                        onClick={handleUpgrade}
-                        className="bg-green-600 text-white px-3 py-1 rounded"
-                      >
-                        Upgrade to Pro
-                      </button>
-                    ) : (
-                      <div className="text-sm text-gray-700">
-                        Ask an Admin to upgrade to Pro to lift the note limit.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>

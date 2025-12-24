@@ -14,7 +14,7 @@ export default function Login() {
     try {
       const data = await login(email, password);
       localStorage.setItem("token", data.token);
-      localStorage.setItem("tenantSlug", data.user.tenantSlug);
+      localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.user.role);
       navigate("/notes");
     } catch (err) {
@@ -53,13 +53,9 @@ export default function Login() {
           <div className="text-sm text-gray-600 mt-3">
             Pre-seeded accounts:
             <br />
-            admin@acme.test / password (Admin, Acme)
+            admin@test.com / password: admin
             <br />
-            user@acme.test / password (Member, Acme)
-            <br />
-            admin@globex.test / password (Admin, Globex)
-            <br />
-            user@globex.test / password (Member, Globex)
+            user@test.com / password: user
           </div>
         </div>
       </div>

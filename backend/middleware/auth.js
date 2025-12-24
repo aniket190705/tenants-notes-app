@@ -1,7 +1,6 @@
 // src/middleware/auth.js
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
-const Tenant = require('../models/Tenant')
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-jwt-secret'
 
@@ -26,10 +25,9 @@ async function getUserFromReq(req) {
     const payload = verifyToken(token)
     if (!payload || !payload.userId) return null
     const user = await User.findById(payload.userId).lean()
+
     if (!user) return null
-    const tenant = await Tenant.findById(user.tenantId).lean()
-    if (!tenant) return null
-    return { user, tenant }
+    return user
 }
 
 module.exports = { signToken, verifyToken, getUserFromReq }
