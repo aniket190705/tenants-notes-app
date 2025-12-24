@@ -39,75 +39,40 @@ Example (backend pseudo):
 ```js
 const user = getUserFromReq(req); // from JWT
 if (user.role !== 'admin') return res.status(403).json({ error: 'Only admins can delete notes' });
+```
 
-🔗 API (versioned under /api/v1)
+##🔗 API (versioned under /api/v1)
 
-All protected endpoints require the header:
+API Endpoints
+Authentication
 
-Authorization: Bearer <JWT_TOKEN>
+POST /api/v1/auth/register – Register a new user
 
-Auth
-POST /api/v1/auth/register
+POST /api/v1/auth/login – User login (returns JWT)
 
-Body
+Notes
 
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "role": "user"   // "admin" or "user"
-}
+POST /api/v1/notes – Create a new note
 
-POST /api/v1/auth/login
+GET /api/v1/notes – Get all notes
 
-Body
+PUT /api/v1/notes/:id – Update a note
 
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
+DELETE /api/v1/notes/:id – Delete a note (admin only)
+
+🔐 All /notes endpoints require a valid JWT in the Authorization header.
 
 
-Success response
-
-{
-  "token": "<JWT_TOKEN>",
-  "role": "user"
-}
-
-Notes (JWT required)
-POST /api/v1/notes
-
-Create a note.
-Body
-
-{ "title": "My note", "content": "Some content" }
-
-GET /api/v1/notes
-
-Get all notes.
-
-PUT /api/v1/notes/:id
-
-Update a note.
-Body (any or both fields)
-
-{ "title": "New title", "content": "New content" }
-
-DELETE /api/v1/notes/:id
-
-Delete a note — Admin only.
-Non-admins receive 403 Forbidden.
-
-🔧 Installation & run
-Prerequisites
-
+##🔧 Installation & run
+**Prerequisites**
+```
 Node.js (v16+ recommended)
-
 MongoDB (local or Atlas)
-
 npm or yarn
+```
 
-Backend
+**Backend**
+```
 # clone and install
 git clone https://github.com/your-username/notes-app.git
 cd notes-app/backend
@@ -120,19 +85,21 @@ npm install
 
 # start (dev)
 npm run dev
+```
 
-Frontend
+**Frontend**
+```
 cd ../frontend
 npm install
 npm start
+```
 
+Frontend default: http://localhost:5173
 
-Frontend default: http://localhost:3000
-
-Backend default: http://localhost:5000
+Backend default: http://localhost:4000
 
 Ensure frontend api base points to /api/v1 (e.g. http://localhost:5000/api/v1).
-
+```
 🧪 Example curl (create note)
 curl -X POST http://localhost:5000/api/v1/notes \
  -H "Authorization: Bearer <JWT_TOKEN>" \
@@ -142,6 +109,7 @@ curl -X POST http://localhost:5000/api/v1/notes \
 Example curl (delete note as admin)
 curl -X DELETE http://localhost:5000/api/v1/notes/<NOTE_ID> \
  -H "Authorization: Bearer <ADMIN_JWT_TOKEN>"
+```
 
 ✅ Assignment coverage checklist
 
