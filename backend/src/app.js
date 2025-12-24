@@ -9,7 +9,7 @@ const notesRoutes = require('../routes/notes')
 const app = express()
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://tenants-notes-app.vercel.app'],
+    origin: ['http://localhost:5173', 'https://rbac-notes-app.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 }))
