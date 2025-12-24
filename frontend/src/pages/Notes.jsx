@@ -91,19 +91,6 @@ export default function Notes() {
     }
   }
 
-  // async function handleUpgrade() {
-  //   if (!tenantSlug) return;
-  //   try {
-  //     await upgradeTenant(tenantSlug);
-  //     // after upgrade, reload notes and hide upgrade CTA
-  //     await loadNotes();
-  //     setShowUpgrade(false);
-  //     alert("Upgraded to Pro — you can now create unlimited notes.");
-  //   } catch (err) {
-  //     setError(err.response?.data?.error || "Upgrade failed");
-  //   }
-  // }
-
   function handleLogout() {
     localStorage.clear();
     navigate("/login");

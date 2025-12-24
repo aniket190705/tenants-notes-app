@@ -1,11 +1,9 @@
-// src/routes/notes.js
 const express = require('express')
 const router = express.Router()
 const Note = require('../models/Note')
 const { getUserFromReq } = require('../middleware/auth')
 
-// GET /api/notes - list notes for tenant
-// POST /api/notes - create note (enforce free plan limit)
+// GET /api/notes - list notes
 router.get('/', async (req, res) => {
     try {
         const notes = await Note.find()
@@ -15,7 +13,7 @@ router.get('/', async (req, res) => {
         return res.status(500).json({ error: 'Server error' })
     }
 })
-
+// POST /api/notes - Add notes
 router.post('/', async (req, res) => {
     try {
         const { title, content } = req.body
