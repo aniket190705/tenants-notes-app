@@ -28,87 +28,50 @@ A small **role-based Notes Management** application demonstrating secure backend
 **Backend:** Node.js, Express, MongoDB, Mongoose, bcrypt, jsonwebtoken  
 **Frontend:** React, Axios, React Router
 
----
+🔗 API Versioning
 
-## 🔐 Important: Role enforcement
+All APIs are versioned under:
 
-> Role is determined from the **decoded JWT** on the server.  
-> Do **not** rely on client-sent role values — the backend enforces admin-only delete by checking the role inside the JWT.
+/api/v1
 
-Example (backend pseudo):
-```js
-const user = getUserFromReq(req); // from JWT
-if (user.role !== 'admin') return res.status(403).json({ error: 'Only admins can delete notes' });
+📚 API Documentation
+Authentication
 
-🔗 API (versioned under /api/v1)
-
-All protected endpoints require the header:
-
-Authorization: Bearer <JWT_TOKEN>
-
-Auth
-POST /api/v1/auth/register
-
-Body
-
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "role": "user"   // "admin" or "user"
-}
+Login
 
 POST /api/v1/auth/login
 
-Body
+
+Response
 
 {
-  "email": "user@example.com",
-  "password": "password123"
-}
-
-
-Success response
-
-{
-  "token": "<JWT_TOKEN>",
+  "token": "jwt_token",
   "role": "user"
 }
 
-Notes (JWT required)
+Notes (JWT Required)
+
+Create Note
+
 POST /api/v1/notes
 
-Create a note.
-Body
 
-{ "title": "My note", "content": "Some content" }
+Get Notes
 
 GET /api/v1/notes
 
-Get all notes.
+
+Update Note
 
 PUT /api/v1/notes/:id
 
-Update a note.
-Body (any or both fields)
 
-{ "title": "New title", "content": "New content" }
+Delete Note (Admin only)
 
 DELETE /api/v1/notes/:id
 
-Delete a note — Admin only.
-Non-admins receive 403 Forbidden.
-
-🔧 Installation & run
-Prerequisites
-
-Node.js (v16+ recommended)
-
-MongoDB (local or Atlas)
-
-npm or yarn
-
+⚙️ Installation
 Backend
-# clone and install
 git clone https://github.com/your-username/notes-app.git
 cd notes-app/backend
 npm install
@@ -120,51 +83,36 @@ npm install
 
 # start (dev)
 npm run dev
+```
 
 Frontend
-cd ../frontend
+cd frontend
 npm install
 npm start
 
 
-Frontend default: http://localhost:3000
+Frontend: http://localhost:3000
 
-Backend default: http://localhost:5000
+Backend: http://localhost:5000
 
-Ensure frontend api base points to /api/v1 (e.g. http://localhost:5000/api/v1).
+🔒 Security & Scalability
 
-🧪 Example curl (create note)
-curl -X POST http://localhost:5000/api/v1/notes \
- -H "Authorization: Bearer <JWT_TOKEN>" \
- -H "Content-Type: application/json" \
- -d '{"title":"Test","content":"Hello"}'
+JWT-based auth
 
-Example curl (delete note as admin)
-curl -X DELETE http://localhost:5000/api/v1/notes/<NOTE_ID> \
- -H "Authorization: Bearer <ADMIN_JWT_TOKEN>"
+Backend-enforced role checks
 
-✅ Assignment coverage checklist
+Modular project structure
 
-✅ JWT authentication & password hashing
+API versioning for future scalability
 
-✅ Role-based access control (server-side enforcement)
+✅ Assignment Coverage
 
-✅ CRUD APIs for notes
+✔ Authentication & JWT
+✔ Role-based access control
+✔ CRUD APIs
+✔ API versioning
+✔ Frontend integration
 
-✅ API versioning (/api/v1)
-
-✅ Frontend integration for testing APIs
-
-✅ Modular project structure (routes, middleware, models)
-
-📈 Scalability / next steps (short note)
-
-Add user ownership (attach userId to notes and return only owner’s notes)
-
-Add validation (Joi/Zod) and centralized error handler
-
-Add caching (Redis), containerize with Docker, and add logging/monitoring for production
-
-👤 Author
+👨‍💻 Author
 
 Aniket Sharma
