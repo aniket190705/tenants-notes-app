@@ -2,7 +2,7 @@
 
 A small **role-based Notes Management** application demonstrating secure backend APIs with **JWT authentication** and **role-based access control (RBAC)**, plus a minimal React frontend to exercise the APIs.
 
-*Live Demo*: https://tenants-notes-app.vercel.app/
+# **Live Demo**: https://tenants-notes-app.vercel.app/
 
 ---
 
