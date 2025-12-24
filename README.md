@@ -63,7 +63,7 @@ DELETE /api/v1/notes/:id – Delete a note (admin only)
 🔐 All /notes endpoints require a valid JWT in the Authorization header.
 
 
-##🔧 Installation & run
+## 🔧 Installation & run
 **Prerequisites**
 ```
 Node.js (v16+ recommended)
@@ -111,21 +111,21 @@ curl -X DELETE http://localhost:5000/api/v1/notes/<NOTE_ID> \
  -H "Authorization: Bearer <ADMIN_JWT_TOKEN>"
 ```
 
-✅ Assignment coverage checklist
+- ✅ Assignment coverage checklist
 
-✅ JWT authentication & password hashing
+- ✅ JWT authentication & password hashing
 
-✅ Role-based access control (server-side enforcement)
+- ✅ Role-based access control (server-side enforcement)
 
-✅ CRUD APIs for notes
+- ✅ CRUD APIs for notes
 
-✅ API versioning (/api/v1)
+- ✅ API versioning (/api/v1)
 
-✅ Frontend integration for testing APIs
+- ✅ Frontend integration for testing APIs
 
-✅ Modular project structure (routes, middleware, models)
+- ✅ Modular project structure (routes, middleware, models)
 
-📈 Scalability / next steps (short note)
+- 📈 Scalability / next steps (short note)
 
 Add user ownership (attach userId to notes and return only owner’s notes)
 
